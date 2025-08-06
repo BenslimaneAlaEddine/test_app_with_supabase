@@ -1,0 +1,2 @@
+C:/Users/luxis compuer/AndroidStudioProjects/learn/android/app/.cxx/Debug/r59184k2/x86/CMakeFiles/edit_cache.dir
+C:/Users/luxis compuer/AndroidStudioProjects/learn/android/app/.cxx/Debug/r59184k2/x86/CMakeFiles/rebuild_cache.dir
