@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:learn/sing_up.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
@@ -34,6 +35,8 @@ class _LoginState extends State<Login> {
   final GlobalKey<FormState> keyForm = GlobalKey();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passWordController = TextEditingController();
+
+  Future<void> singUp() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -93,8 +96,20 @@ class _LoginState extends State<Login> {
                           padding: const EdgeInsets.only(top: 60),
                           child: RichText(
                             text: TextSpan(
-                                text: "Don't have an account? ",style: TextStyle(color: Colors.black),
-                                children: [TextSpan(text: "Sign up.",style: TextStyle(color: Colors.blue),recognizer: TapGestureRecognizer()..onTap=(){})]),
+                                text: "Don't have an account? ",
+                                style: TextStyle(color: Colors.black),
+                                children: [
+                                  TextSpan(
+                                      text: "Sign up.",
+                                      style: TextStyle(color: Colors.blue),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          Navigator.of(context)
+                                              .push(MaterialPageRoute(
+                                            builder: (context) => SingUp(),
+                                          ));
+                                        })
+                                ]),
                           ),
                         )
                       ],
