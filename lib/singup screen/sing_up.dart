@@ -5,30 +5,18 @@ import 'package:learn/singup%20screen/singup_button.dart';
 import 'package:learn/singup%20screen/singup_password_field.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class SingUp extends StatefulWidget {
-  const SingUp({super.key});
+class Signup extends StatefulWidget {
+  const Signup({super.key});
 
   @override
-  State<SingUp> createState() => _SingUpState();
+  State<Signup> createState() => _SignupState();
 }
 
-class _SingUpState extends State<SingUp> {
+class _SignupState extends State<Signup> {
   final GlobalKey<FormState> keyForm = GlobalKey();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passWordController = TextEditingController();
   DateTime? now;
-
-  Future<void> singup() async {
-    try {
-      final reponse = await Supabase.instance.client.auth.signUp(
-          email: emailController.text, password: passWordController.text);
-      if (reponse.error == null) {
-        print("okkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
-      } else {
-        print("nooooooooooooooooooooooooooooo");
-      }
-    } catch (e) {}
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +51,26 @@ class _SingUpState extends State<SingUp> {
         ),
       ),
     );
+  }
+
+  Future<void> singup({required String email, required String password}) async {
+    try {
+      final response = await Supabase.instance.client.auth
+          .signUp(email: email, password: password);
+      if (response.user != null && response.user?.emailConfirmedAt != null) {
+        print("done");
+        print(response.user!.emailConfirmedAt);
+      } else if (response.user != null &&
+          response.user?.emailConfirmedAt == null) {
+        print("You need to confirm your email.");
+        print(response.user?.emailConfirmedAt);
+      } else
+        print("error user is null");
+    } on AuthException catch (e) {
+      print("خطأ مصادقة ${e.message}");
+    } catch (e) {
+      print("خطأ غير متوقع : $e");
+    }
   }
 
   SnackBar snackBar({required Widget content, required int duration}) {

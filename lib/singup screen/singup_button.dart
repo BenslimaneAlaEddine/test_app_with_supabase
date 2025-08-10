@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
+
 class SignupButton extends StatelessWidget {
   final Function snackBar;
   final GlobalKey<FormState> keyForm;
   final TextEditingController emailController;
   final TextEditingController passWordController;
-  final Function singup;
+  final Future<void> Function({required String email, required String password})
+      singup;
   bool isNotTap;
   DateTime? now;
 
   SignupButton(
       {super.key,
-        required this.keyForm,
-        required this.emailController,
-        required this.passWordController,
-        required this.singup,
-        required this.now,
-        required this.isNotTap,
-        required this.snackBar});
+      required this.keyForm,
+      required this.emailController,
+      required this.passWordController,
+      required this.singup,
+      required this.now,
+      required this.isNotTap,
+      required this.snackBar});
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +31,13 @@ class SignupButton extends StatelessWidget {
           int timeDifference = DateTime.now().difference(now!).inSeconds;
           if (timeDifference >= 59 || isNotTap) {
             now = DateTime.now();
-            singup();
+            singup(
+                email: emailController.text, password: passWordController.text);
             ScaffoldMessenger.of(context).showSnackBar(snackBar(
                 content: const Text(
                     "A confirmation email has been sent. Please check your inbox and confirm your email"),
                 duration: 8));
-            isNotTap=false;
+            isNotTap = false;
           } else {
             ScaffoldMessenger.of(context).showSnackBar(snackBar(
               content: Text(
