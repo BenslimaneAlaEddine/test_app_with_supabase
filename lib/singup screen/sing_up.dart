@@ -53,23 +53,24 @@ class _SignupState extends State<Signup> {
     );
   }
 
-  Future<void> singup({required String email, required String password}) async {
+  Future<String> singup(
+      {required String email, required String password}) async {
     try {
       final response = await Supabase.instance.client.auth
           .signUp(email: email, password: password);
       if (response.user != null && response.user?.emailConfirmedAt != null) {
-        print("done");
         print(response.user!.emailConfirmedAt);
+        return "done";
       } else if (response.user != null &&
           response.user?.emailConfirmedAt == null) {
-        print("You need to confirm your email.");
-        print(response.user?.emailConfirmedAt);
+        return "A confirmation email has been sent. Please check your inbox and confirm your email**.";
+        // print(response.user?.emailConfirmedAt);
       } else
-        print("error user is null");
+       { return "error user is null";}
     } on AuthException catch (e) {
-      print("خطأ مصادقة ${e.message}");
+      return "خطأ مصادقة ${e.message}";
     } catch (e) {
-      print("خطأ غير متوقع : $e");
+      return "خطأ غير متوقع : $e";
     }
   }
 
@@ -82,8 +83,4 @@ class _SignupState extends State<Signup> {
       showCloseIcon: true,
     );
   }
-}
-
-extension on AuthResponse {
-  get error => null;
 }

@@ -5,8 +5,8 @@ class SignupButton extends StatelessWidget {
   final GlobalKey<FormState> keyForm;
   final TextEditingController emailController;
   final TextEditingController passWordController;
-  final Future<void> Function({required String email, required String password})
-      singup;
+  final Future<String> Function(
+      {required String email, required String password}) singup;
   bool isNotTap;
   DateTime? now;
 
@@ -23,20 +23,18 @@ class SignupButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
-      onPressed: () {
+      onPressed: () async {
         if (isNotTap) {
           now = DateTime.now();
         }
         if (keyForm.currentState!.validate()) {
           int timeDifference = DateTime.now().difference(now!).inSeconds;
           if (timeDifference >= 59 || isNotTap) {
-            now = DateTime.now();
-            singup(
+            String status = await singup(
                 email: emailController.text, password: passWordController.text);
-            ScaffoldMessenger.of(context).showSnackBar(snackBar(
-                content: const Text(
-                    "A confirmation email has been sent. Please check your inbox and confirm your email"),
-                duration: 8));
+            now = DateTime.now();
+            ScaffoldMessenger.of(context)
+                .showSnackBar(snackBar(content: Text(status), duration: 8));
             isNotTap = false;
           } else {
             ScaffoldMessenger.of(context).showSnackBar(snackBar(
