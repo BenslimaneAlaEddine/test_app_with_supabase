@@ -65,8 +65,9 @@ class _SignupState extends State<Signup> {
           response.user?.emailConfirmedAt == null) {
         return "A confirmation email has been sent. Please check your inbox and confirm your email**.";
         // print(response.user?.emailConfirmedAt);
-      } else
-       { return "error user is null";}
+      } else {
+        return "error user is null";
+      }
     } on AuthException catch (e) {
       return "خطأ مصادقة ${e.message}";
     } catch (e) {

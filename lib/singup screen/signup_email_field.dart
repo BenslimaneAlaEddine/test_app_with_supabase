@@ -17,7 +17,8 @@ class SignupEmailField extends StatelessWidget {
         border: OutlineInputBorder(),
       ),
       validator: (val) {
-        final emailRegex = RegExp(r"^[a-zA-Z\d]+([._%+-][a-zA-Z\d]+)*@[a-zA-Z\d]+(\.[a-zA-Z\d]+)*\.[a-zA-Z]{2,20}$");
+        final emailRegex = RegExp(
+            r"^[a-zA-Z\d]+([._%+-][a-zA-Z\d]+)*@[a-zA-Z\d]+(\.[a-zA-Z\d]+)*\.[a-zA-Z]{2,20}$");
         if (val!.isEmpty) {
           return "Please enter a value.\nThis field cannot be left empty.";
         } else if (!emailRegex.hasMatch(val)) {

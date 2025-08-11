@@ -1,5 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:learn/home.dart';
+import 'package:learn/login%20screen/singin_button.dart';
+import 'package:learn/singup%20screen/sing_up.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'go_to_signup_text.dart';
 import 'login_email_field.dart';
@@ -35,11 +39,11 @@ class _LoginState extends State<Login> {
                         LoginEmailField(emailController: emailController),
                         LoginPasswordField(
                             passWordController: passWordController),
-                        OutlinedButton(
-                          onPressed: () {
-                            print(keyForm.currentState!.validate());
-                          },
-                          child: const Text("Login"),
+                        LoginButton(
+                          keyForm: keyForm,
+                          signIn: signIn,
+                          emailController: emailController,
+                          passWordController: passWordController,
                         ),
                         const GoToSignupText()
                       ],
@@ -50,5 +54,29 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  Future<String> signIn(
+      {required String email, required String password}) async {
+    try {
+      final response = await Supabase.instance.client.auth
+          .signInWithPassword(email: email, password: password);
+      if (response.session != null) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (context) => Home(
+                      response: response,
+                    )),
+            (route) => false);
+        return "valid";
+      } else {
+        print(response.session?.user);
+        return "err ${response.session}";
+      }
+    } on AuthException catch (e) {
+      return e.message;
+    } catch (e) {
+      return "خطأ غير متوقع $e";
+    }
   }
 }
