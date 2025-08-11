@@ -9,7 +9,7 @@ class SignupButton extends StatelessWidget {
       {required String email, required String password}) singup;
   bool isNotTap;
   DateTime? now;
-
+  bool isProcissing = false;
   SignupButton(
       {super.key,
       required this.keyForm,
@@ -24,6 +24,8 @@ class SignupButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return OutlinedButton(
       onPressed: () async {
+        if (isProcissing) return;
+        isProcissing = true;
         if (isNotTap) {
           now = DateTime.now();
         }
@@ -44,6 +46,7 @@ class SignupButton extends StatelessWidget {
             ));
           }
         }
+        isProcissing = false;
       },
       child: const Text("Sign up"),
     );
