@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:learn/login%20screen/login.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Home extends StatelessWidget {
@@ -22,6 +23,11 @@ class Home extends StatelessWidget {
                 "*****************************************************************************************");
             print(sessionEnd);
             print(response.user);
+            if (sessionEnd == null) {
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (contexr) => Login()),
+                  (route) => false);
+            }
           }
         }, itemBuilder: (context) {
           return [
