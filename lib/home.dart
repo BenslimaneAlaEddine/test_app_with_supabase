@@ -3,28 +3,46 @@ import 'package:learn/home%20screen/add_data.dart';
 import 'package:learn/home%20screen/home_pop_up_menu_button.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class Home extends StatelessWidget {
-  const Home({super.key, required this.response});
+class Home extends StatefulWidget {
+  Home({super.key, required this.response});
   final AuthResponse response;
 
   @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  Future<List<Map<String, dynamic>>> getData() async {
+    final response = await Supabase.instance.client
+        .from('Profile')
+        .select('firstName,secondName');
+    return response;
+  }
+
+  late Future myFuture;
+  @override
+  void initState() {
+    super.initState();
+    myFuture = getData();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    print(response.user!.id);
-    // getData();
+    print(widget.response.user!.id);
     return Scaffold(
-      floatingActionButton: AddData(response: response),
+      floatingActionButton: AddData(response: widget.response),
       appBar: AppBar(title: const Text("Welcome"), actions: [
-        HomePopupMenuButton(response: response),
+        HomePopupMenuButton(response: widget.response),
       ]),
       body: Center(
         child: Column(
           children: [
             Text(
-              "Hi ${response.user?.email}: ",
+              "Hi ${widget.response.user?.email}: ",
               overflow: TextOverflow.ellipsis,
             ),
             FutureBuilder(
-                future: getData(),
+                future: myFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator();
@@ -32,8 +50,16 @@ class Home extends StatelessWidget {
                     print(snapshot.hasError);
                     return Column(
                       children: [
-                        Text("FirstName: ${snapshot.error}"),
-                        Text("SecondName: ${snapshot.error} "),
+                        Text(
+                          "FirstName: ${snapshot.error}",
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          "SecondName: ${snapshot.error} ",
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ],
                     );
                   }
@@ -64,12 +90,5 @@ class Home extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<List<Map<String, dynamic>>> getData() async {
-    final response = await Supabase.instance.client
-        .from('Profile')
-        .select('firstName,secondName');
-    return response;
   }
 }
