@@ -4,17 +4,13 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'add_data_form.dart';
 
 class AddDataFloatingButtonWithDialog extends StatelessWidget {
-  const AddDataFloatingButtonWithDialog({super.key,
-    required this.response,
-    required this.keyForm,
-    required this.firstName,
-    required this.secondName});
-
+  AddDataFloatingButtonWithDialog(
+      {super.key, required this.response, required this.existingData});
   final AuthResponse response;
-  final GlobalKey<FormState> keyForm;
-  final TextEditingController firstName;
-  final TextEditingController secondName;
-
+  final GlobalKey<FormState> keyForm = GlobalKey();
+  final TextEditingController firstName = TextEditingController();
+  final TextEditingController secondName = TextEditingController();
+  final List existingData;
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
@@ -28,11 +24,11 @@ class AddDataFloatingButtonWithDialog extends StatelessWidget {
                 title: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: AddDataForm(
-                    keyForm: keyForm,
-                    firstName: firstName,
-                    secondName: secondName,
-                    response: response,
-                  ),
+                      keyForm: keyForm,
+                      firstName: firstName,
+                      secondName: secondName,
+                      response: response,
+                      existingData: existingData),
                 ),
                 actions: [
                   OutlinedButton(
@@ -41,7 +37,7 @@ class AddDataFloatingButtonWithDialog extends StatelessWidget {
                         firstName.clear();
                         secondName.clear();
                       },
-                      child: Text("close")),
+                      child: const Text("close")),
                 ],
               );
             });

@@ -26,11 +26,24 @@ class _HomeState extends State<Home> {
     myFuture = getData();
   }
 
+  late List existingData;
   @override
   Widget build(BuildContext context) {
     print(widget.response.user!.id);
     return Scaffold(
-      floatingActionButton: AddData(response: widget.response),
+      floatingActionButton: FutureBuilder(
+          future: myFuture,
+          builder: (context, asyncSnapshot) {
+            if (asyncSnapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            }
+            if (asyncSnapshot.hasError) return const Text("error");
+            existingData = asyncSnapshot.data ?? [];
+            return AddData(
+              response: widget.response,
+              existingData: existingData,
+            );
+          }),
       appBar: AppBar(title: const Text("Welcome"), actions: [
         HomePopupMenuButton(response: widget.response),
       ]),
@@ -66,6 +79,7 @@ class _HomeState extends State<Home> {
                   final data = snapshot.data;
                   print(data);
                   if (data != null) {
+                    existingData = data;
                     print(data);
                     return Column(
                       children: [
