@@ -9,17 +9,18 @@ class InsertAndUpdateAndDeleteDataButtom extends StatelessWidget {
       required this.update,
       required this.firstName,
       required this.secondName,
-      required this.updated,
       required this.delete,
-      required this.callBackMyFutureFromHome, required this.contextD});
+      required this.callBackMyFutureFromHome,
+      required this.contextD,
+      required this.keyForm});
+  final GlobalKey<FormState> keyForm;
   final Function() callBackMyFutureFromHome;
   final List existingData;
   final Future<String> Function() insertData;
   final Future<String> Function() update;
   final TextEditingController firstName;
   final TextEditingController secondName;
- final BuildContext contextD;
-  bool updated;
+  final BuildContext contextD;
   // bool inserted = false;
   final Future<String> Function() delete;
   @override
@@ -32,24 +33,28 @@ class InsertAndUpdateAndDeleteDataButtom extends StatelessWidget {
                 final status;
                 if (existingData.isEmpty) {
                   // inserted = true;
-                  status = await insertData();
-                  Navigator.pop(contextD);
-                  if (status == "Your data has been sent") {
-                    callBackMyFutureFromHome();
+                  if (keyForm.currentState?.validate() ?? false) {
+                    status = await insertData();
+                    Navigator.pop(contextD);
+                    if (status == "Your data has been sent") {
+                      callBackMyFutureFromHome();
+                    }
+                  } else {
+                    status = "enter data";
                   }
                 } else {
                   if (existingData.isNotEmpty) {
                     if ((existingData[0]["firstName"] != firstName.text ||
                             existingData[0]["secondName"] != secondName.text) &&
-                        !updated) {
+                        (keyForm.currentState?.validate() ?? false)) {
                       status = await update();
                       Navigator.pop(contextD);
                       if (status == "updated avec succes") {
                         callBackMyFutureFromHome();
                       }
-                      updated = true;
                     } else {
-                      status = "updated";
+                      status =
+                          "The data must not be empty and must be different from the previous one.";
                     }
                   } else
                     status = "there is no data to update";
