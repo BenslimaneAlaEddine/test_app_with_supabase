@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:learn/home%20screen/add_data.dart';
 import 'package:learn/home%20screen/add_data_first_name_field.dart';
 import 'package:learn/home%20screen/add_data_second_name_field.dart';
+import 'package:learn/home%20screen/insert_and_update_anddelete_data_buttom.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AddDataForm extends StatelessWidget {
@@ -11,8 +12,9 @@ class AddDataForm extends StatelessWidget {
       required this.firstName,
       required this.secondName,
       required this.response,
-      required this.existingData});
-
+      required this.existingData,
+      required this.callBackMyFutureFromHome});
+  final Function() callBackMyFutureFromHome;
   final GlobalKey<FormState> keyForm;
   final TextEditingController firstName;
   final TextEditingController secondName;
@@ -32,27 +34,15 @@ class AddDataForm extends StatelessWidget {
             const Text("Add your data to your profile"),
             AddDataFirstNameField(firstName: firstName),
             AddDataSecondNameField(secondName: secondName),
-            OutlinedButton(
-                onPressed: () async {
-                  final status;
-                  if (existingData.isEmpty) {
-                    status = await insertData();
-                  } else {
-                    if ((existingData[0]["firstName"] != firstName.text ||
-                            existingData[0]["secondName"] != secondName.text) &&
-                        !updated) {
-                      status = await update();
-                      updated = true;
-                    } else {
-                      status = "updated";
-                    }
-                  }
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(status),
-                    duration: const Duration(seconds: 3),
-                  ));
-                },
-                child: Text(existingData.isEmpty ? "Add Data" : "Update Data")),
+            InsertAndUpdateAndDeleteDataButtom(
+                callBackMyFutureFromHome: callBackMyFutureFromHome,
+                existingData: existingData,
+                insertData: insertData,
+                update: update,
+                firstName: firstName,
+                secondName: secondName,
+                updated: updated,
+                delete: delete),
           ],
         ));
   }
@@ -67,7 +57,7 @@ class AddDataForm extends StatelessWidget {
         });
         return "Your data has been sent";
       } else {
-        return "nots valid";
+        return "not valid";
       }
     } on PostgrestException catch (e) {
       return e.message;
@@ -98,6 +88,20 @@ class AddDataForm extends StatelessWidget {
       return e.message;
     } catch (e) {
       return "$e";
+    }
+  }
+
+  Future<String> delete() async {
+    try {
+      await Supabase.instance.client
+          .from("Profile")
+          .delete()
+          .eq("idUser", response.user!.id);
+      return "Deleted";
+    } on PostgrestException catch (e) {
+      return e.message;
+    } catch (e) {
+      return "Unexpected error";
     }
   }
 }

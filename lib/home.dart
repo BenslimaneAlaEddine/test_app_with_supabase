@@ -40,6 +40,11 @@ class _HomeState extends State<Home> {
             if (asyncSnapshot.hasError) return const Text("error");
             existingData = asyncSnapshot.data ?? [];
             return AddData(
+              callBackMyFutureFromHome: () {
+                setState(() {
+                  myFuture = getData();
+                });
+              },
               response: widget.response,
               existingData: existingData,
             );

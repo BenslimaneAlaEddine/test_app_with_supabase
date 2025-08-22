@@ -5,7 +5,11 @@ import 'add_data_form.dart';
 
 class AddDataFloatingButtonWithDialog extends StatelessWidget {
   AddDataFloatingButtonWithDialog(
-      {super.key, required this.response, required this.existingData});
+      {super.key,
+      required this.response,
+      required this.existingData,
+      required this.callBackMyFutureFromHome});
+  final Function() callBackMyFutureFromHome;
   final AuthResponse response;
   final GlobalKey<FormState> keyForm = GlobalKey();
   final TextEditingController firstName = TextEditingController();
@@ -28,12 +32,13 @@ class AddDataFloatingButtonWithDialog extends StatelessWidget {
                       firstName: firstName,
                       secondName: secondName,
                       response: response,
-                      existingData: existingData),
+                      existingData: existingData,
+                      callBackMyFutureFromHome: callBackMyFutureFromHome),
                 ),
                 actions: [
                   OutlinedButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pop(contextD);
                         firstName.clear();
                         secondName.clear();
                       },
