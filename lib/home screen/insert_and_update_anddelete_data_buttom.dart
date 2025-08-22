@@ -11,13 +11,14 @@ class InsertAndUpdateAndDeleteDataButtom extends StatelessWidget {
       required this.secondName,
       required this.updated,
       required this.delete,
-      required this.callBackMyFutureFromHome});
+      required this.callBackMyFutureFromHome, required this.contextD});
   final Function() callBackMyFutureFromHome;
   final List existingData;
   final Future<String> Function() insertData;
   final Future<String> Function() update;
-  final firstName;
-  final secondName;
+  final TextEditingController firstName;
+  final TextEditingController secondName;
+ final BuildContext contextD;
   bool updated;
   // bool inserted = false;
   final Future<String> Function() delete;
@@ -32,6 +33,7 @@ class InsertAndUpdateAndDeleteDataButtom extends StatelessWidget {
                 if (existingData.isEmpty) {
                   // inserted = true;
                   status = await insertData();
+                  Navigator.pop(contextD);
                   if (status == "Your data has been sent") {
                     callBackMyFutureFromHome();
                   }
@@ -41,6 +43,7 @@ class InsertAndUpdateAndDeleteDataButtom extends StatelessWidget {
                             existingData[0]["secondName"] != secondName.text) &&
                         !updated) {
                       status = await update();
+                      Navigator.pop(contextD);
                       if (status == "updated avec succes") {
                         callBackMyFutureFromHome();
                       }
@@ -67,6 +70,7 @@ class InsertAndUpdateAndDeleteDataButtom extends StatelessWidget {
                   final String status;
                   if (existingData.isNotEmpty) {
                     status = await delete();
+                    Navigator.pop(contextD);
                     if (status == "Deleted") {
                       callBackMyFutureFromHome();
                     }

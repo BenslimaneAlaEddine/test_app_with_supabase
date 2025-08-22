@@ -5,6 +5,7 @@ import 'package:learn/home%20screen/add_data_second_name_field.dart';
 import 'package:learn/home%20screen/insert_and_update_anddelete_data_buttom.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+// ignore: must_be_immutable
 class AddDataForm extends StatelessWidget {
   AddDataForm(
       {super.key,
@@ -13,13 +14,14 @@ class AddDataForm extends StatelessWidget {
       required this.secondName,
       required this.response,
       required this.existingData,
-      required this.callBackMyFutureFromHome});
+      required this.callBackMyFutureFromHome, required this.contextD});
   final Function() callBackMyFutureFromHome;
   final GlobalKey<FormState> keyForm;
   final TextEditingController firstName;
   final TextEditingController secondName;
   final AuthResponse response;
   final List existingData;
+  final BuildContext contextD;
   bool updated = false;
   @override
   Widget build(BuildContext context) {
@@ -42,7 +44,7 @@ class AddDataForm extends StatelessWidget {
                 firstName: firstName,
                 secondName: secondName,
                 updated: updated,
-                delete: delete),
+                delete: delete,contextD:contextD),
           ],
         ));
   }

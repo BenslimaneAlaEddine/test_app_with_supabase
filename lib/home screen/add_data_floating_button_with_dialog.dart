@@ -3,24 +3,39 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'add_data_form.dart';
 
-class AddDataFloatingButtonWithDialog extends StatelessWidget {
-  AddDataFloatingButtonWithDialog(
+class AddDataFloatingButtonWithDialog extends StatefulWidget {
+  const AddDataFloatingButtonWithDialog(
       {super.key,
       required this.response,
       required this.existingData,
       required this.callBackMyFutureFromHome});
   final Function() callBackMyFutureFromHome;
   final AuthResponse response;
-  final GlobalKey<FormState> keyForm = GlobalKey();
-  final TextEditingController firstName = TextEditingController();
-  final TextEditingController secondName = TextEditingController();
   final List existingData;
+
+  @override
+  State<AddDataFloatingButtonWithDialog> createState() => _AddDataFloatingButtonWithDialogState();
+}
+
+class _AddDataFloatingButtonWithDialogState extends State<AddDataFloatingButtonWithDialog> {
+  final GlobalKey<FormState> keyForm = GlobalKey();
+
+  final TextEditingController firstName = TextEditingController();
+
+  final TextEditingController secondName = TextEditingController();
+  @override
+  void dispose() {
+    firstName.dispose();
+    secondName.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
       onPressed: () {
         showDialog(
-            useRootNavigator: true,
+            // useRootNavigator: true,
             context: context,
             builder: (contextD) {
               return AlertDialog(
@@ -31,16 +46,17 @@ class AddDataFloatingButtonWithDialog extends StatelessWidget {
                       keyForm: keyForm,
                       firstName: firstName,
                       secondName: secondName,
-                      response: response,
-                      existingData: existingData,
-                      callBackMyFutureFromHome: callBackMyFutureFromHome),
+                      response: widget.response,
+                      existingData: widget.existingData,
+                      callBackMyFutureFromHome: widget.callBackMyFutureFromHome,
+                  contextD:context),
                 ),
                 actions: [
                   OutlinedButton(
                       onPressed: () {
-                        Navigator.pop(contextD);
                         firstName.clear();
                         secondName.clear();
+                        Navigator.pop(contextD);
                       },
                       child: const Text("close")),
                 ],
