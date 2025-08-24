@@ -9,20 +9,37 @@ class AddDataFloatingButtonWithDialog extends StatefulWidget {
       required this.response,
       required this.existingData,
       required this.callBackMyFutureFromHome});
+
   final Function() callBackMyFutureFromHome;
   final AuthResponse response;
   final List existingData;
 
   @override
-  State<AddDataFloatingButtonWithDialog> createState() => _AddDataFloatingButtonWithDialogState();
+  State<AddDataFloatingButtonWithDialog> createState() =>
+      _AddDataFloatingButtonWithDialogState();
 }
 
-class _AddDataFloatingButtonWithDialogState extends State<AddDataFloatingButtonWithDialog> {
+class _AddDataFloatingButtonWithDialogState
+    extends State<AddDataFloatingButtonWithDialog> {
   final GlobalKey<FormState> keyForm = GlobalKey();
 
-  final TextEditingController firstName = TextEditingController();
+  late final TextEditingController firstName;
 
-  final TextEditingController secondName = TextEditingController();
+  late final TextEditingController secondName;
+
+  @override
+  void initState() {
+    super.initState();
+    firstName = TextEditingController(
+        text: widget.existingData.isNotEmpty
+            ? widget.existingData[0]["firstName"]
+            : "");
+    secondName = TextEditingController(
+        text: widget.existingData.isNotEmpty
+            ? widget.existingData[0]["secondName"]
+            : "");
+  }
+
   @override
   void dispose() {
     firstName.dispose();
@@ -49,13 +66,11 @@ class _AddDataFloatingButtonWithDialogState extends State<AddDataFloatingButtonW
                       response: widget.response,
                       existingData: widget.existingData,
                       callBackMyFutureFromHome: widget.callBackMyFutureFromHome,
-                  contextD:context),
+                      contextD: context),
                 ),
                 actions: [
                   OutlinedButton(
                       onPressed: () {
-                        firstName.clear();
-                        secondName.clear();
                         Navigator.pop(contextD);
                       },
                       child: const Text("close")),

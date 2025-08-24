@@ -5,7 +5,6 @@ class AddDataFirstNameField extends StatelessWidget {
     super.key,
     required this.firstName,
   });
-
   final TextEditingController firstName;
 
   @override

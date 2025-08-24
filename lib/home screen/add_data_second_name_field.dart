@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AddDataSecondNameField extends StatelessWidget {
-  const AddDataSecondNameField({
-    super.key,
-    required this.secondName,
-  });
+  const AddDataSecondNameField(
+      {super.key, required this.secondName,});
 
   final TextEditingController secondName;
 

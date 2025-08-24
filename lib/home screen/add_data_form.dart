@@ -7,7 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 // ignore: must_be_immutable
 class AddDataForm extends StatelessWidget {
-  AddDataForm(
+  const AddDataForm(
       {super.key,
       required this.keyForm,
       required this.firstName,
@@ -23,20 +23,17 @@ class AddDataForm extends StatelessWidget {
   final AuthResponse response;
   final List existingData;
   final BuildContext contextD;
-  bool updated = false;
+  // bool updated = false;
   @override
   Widget build(BuildContext context) {
-    if (existingData.isNotEmpty) {
-      firstName.text = existingData[0]["firstName"];
-      secondName.text = existingData[0]["secondName"];
-    }
+
     return Form(
         key: keyForm,
         child: Column(
           children: [
             const Text("Add your data to your profile"),
-            AddDataFirstNameField(firstName: firstName),
-            AddDataSecondNameField(secondName: secondName),
+            AddDataFirstNameField(firstName: firstName,),
+            AddDataSecondNameField(secondName: secondName,),
             InsertAndUpdateAndDeleteDataButtom(
                 callBackMyFutureFromHome: callBackMyFutureFromHome,
                 existingData: existingData,
@@ -45,7 +42,7 @@ class AddDataForm extends StatelessWidget {
                 firstName: firstName,
                 secondName: secondName,
                 delete: delete,
-                contextD: contextD,
+                contextD: context,
                 keyForm: keyForm),
           ],
         ));
