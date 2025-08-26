@@ -12,7 +12,7 @@ class AddDataSecondNameField extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: TextFormField(
         validator: (value) {
-          final regExpName = RegExp(r"^[A-Za-z][a-z]+$");
+          final regExpName = RegExp(r"^[A-Za-z][a-z]+ *$");
           if (secondName.text.isEmpty) {
             return "enter firstName field";
           } else {

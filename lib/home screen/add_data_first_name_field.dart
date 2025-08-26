@@ -13,7 +13,7 @@ class AddDataFirstNameField extends StatelessWidget {
       controller: firstName,
       decoration: const InputDecoration(label: const Text("firstName")),
       validator: (value) {
-        final regExpName = RegExp(r"^[A-Za-z][a-z]+$");
+        final regExpName = RegExp(r"^[A-Za-z][a-z]+ *$");
         if (firstName.text.isEmpty) {
           return "enter firstName field";
         } else {

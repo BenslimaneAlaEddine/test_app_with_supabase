@@ -71,6 +71,17 @@ class _AddDataFloatingButtonWithDialogState
                 actions: [
                   OutlinedButton(
                       onPressed: () {
+                        if(widget.existingData.isNotEmpty){
+                        if(firstName.text != widget.existingData[0]["firstName"])
+                        {
+                          firstName.text =widget.existingData[0]["firstName"];
+                        }
+                        if(secondName.text != widget.existingData[0]["secondName"])
+                        {
+                          secondName.text =widget.existingData[0]["secondName"];
+                        }
+                        }
+
                         Navigator.pop(contextD);
                       },
                       child: const Text("close")),

@@ -52,8 +52,8 @@ class AddDataForm extends StatelessWidget {
     try {
       if (keyForm.currentState?.validate() ?? false) {
         await Supabase.instance.client.from("Profile").insert({
-          "firstName": firstName.text,
-          "secondName": secondName.text,
+          "firstName": firstName.text.trim(),
+          "secondName": secondName.text.trim(),
           "idUser": response.user?.id
         });
         return "Your data has been sent";
@@ -69,21 +69,22 @@ class AddDataForm extends StatelessWidget {
 
   Future<String> update() async {
     try {
-      if (existingData[0]["firstName"] != firstName.text &&
-          existingData[0]["secondName"] != secondName.text) {
+      if (existingData[0]["firstName"] != firstName.text.trim() &&
+          existingData[0]["secondName"] != secondName.text.trim()) {
         await Supabase.instance.client.from("Profile").update({
-          "firstName": firstName.text,
-          "secondName": secondName.text
+          "firstName": firstName.text.trim(),
+          "secondName": secondName.text.trim()
         }).eq('idUser', response.user!.id);
-      } else if (existingData[0]["firstName"] != firstName.text) {
+      } else if (existingData[0]["firstName"] != firstName.text.trim()) {
         await Supabase.instance.client.from("Profile").update({
-          "firstName": firstName.text,
+          "firstName": firstName.text.trim(),
         }).eq('idUser', response.user!.id);
-      } else {
+      } else if (existingData[0]["secondName"] != secondName.text.trim()){
         await Supabase.instance.client.from("Profile").update({
-          "secondName": secondName.text,
+          "secondName": secondName.text.trim(),
         }).eq('idUser', response.user!.id);
       }
+      else{ return "same data !";}
       return "updated avec succes";
     } on PostgrestException catch (e) {
       return e.message;

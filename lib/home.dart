@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:learn/home%20screen/add_data.dart';
 import 'package:learn/home%20screen/home_pop_up_menu_button.dart';
+import 'package:learn/home%20screen/user_data_in_the_home.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Home extends StatefulWidget {
   Home({super.key, required this.response});
+
   final AuthResponse response;
 
   @override
@@ -19,14 +21,29 @@ class _HomeState extends State<Home> {
     return response;
   }
 
+  //   Future<dynamic> getData() async {
+  //     try {
+  //       final response = await Supabase.instance.client
+  //           .from('Profile')
+  //           .select('firstName,secondName');
+  //       return response;
+  //     }
+  //     on PostgrestException catch(e){
+  //       return e.message;
+  //     }
+  //     catch(e){
+  //       return "Exception error";
+  //     }
+  //   }
+
   late Future myFuture;
+
   @override
   void initState() {
     super.initState();
     myFuture = getData();
   }
 
-  late List existingData;
   @override
   Widget build(BuildContext context) {
     print(widget.response.user!.id);
@@ -38,7 +55,7 @@ class _HomeState extends State<Home> {
               return const CircularProgressIndicator();
             }
             if (asyncSnapshot.hasError) return const Text("error");
-            existingData = asyncSnapshot.data ?? [];
+            // existingData = asyncSnapshot.data ?? [];
             return AddData(
               callBackMyFutureFromHome: () {
                 setState(() {
@@ -46,7 +63,7 @@ class _HomeState extends State<Home> {
                 });
               },
               response: widget.response,
-              existingData: existingData,
+              existingData: asyncSnapshot.data ?? [],
             );
           }),
       appBar: AppBar(title: const Text("Welcome"), actions: [
@@ -59,55 +76,11 @@ class _HomeState extends State<Home> {
               "Hi ${widget.response.user?.email}: ",
               overflow: TextOverflow.ellipsis,
             ),
-            FutureBuilder(
-                future: myFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    print(snapshot.hasError);
-                    return Column(
-                      children: [
-                        Text(
-                          "FirstName: ${snapshot.error}",
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          "SecondName: ${snapshot.error} ",
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    );
-                  }
-                  final data = snapshot.data;
-                  print(data);
-                  if (data != null) {
-                    existingData = data;
-                    print(data);
-                    return Column(
-                      children: [
-                        Text(data.isEmpty
-                            ? "FirstName: "
-                            : "FirstName: ${data[0]["firstName"]}"),
-                        Text(data.isEmpty
-                            ? "SecondName: "
-                            : "SecondName: ${data[0]["secondName"]}"),
-                      ],
-                    );
-                  } else {
-                    return const Column(
-                      children: [
-                        Text("FirstName: "),
-                        Text("SecondName: "),
-                      ],
-                    );
-                  }
-                })
+            UserDataInTheHome(myFuture: myFuture)
           ],
         ),
       ),
     );
   }
 }
+
