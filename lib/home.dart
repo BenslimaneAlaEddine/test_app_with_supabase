@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:learn/home%20screen/add_data.dart';
 import 'package:learn/home%20screen/home_pop_up_menu_button.dart';
+import 'package:learn/home%20screen/upload_image_to_app.dart';
 import 'package:learn/home%20screen/user_data_in_the_home.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -66,9 +67,25 @@ class _HomeState extends State<Home> {
               existingData: asyncSnapshot.data ?? [],
             );
           }),
-      appBar: AppBar(title: const Text("Welcome"), actions: [
-        HomePopupMenuButton(response: widget.response),
-      ]),
+      appBar: AppBar(
+          centerTitle: true,
+          primary: true,
+          toolbarHeight: 90,
+          leadingWidth: 80,
+          backgroundColor: Colors.blueGrey,
+          title: const Text("Welcome"),
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Container(
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.green,
+              ),
+            ),
+          ),
+          actions: [
+            HomePopupMenuButton(response: widget.response),
+          ]),
       body: Center(
         child: Column(
           children: [
@@ -76,11 +93,11 @@ class _HomeState extends State<Home> {
               "Hi ${widget.response.user?.email}: ",
               overflow: TextOverflow.ellipsis,
             ),
-            UserDataInTheHome(myFuture: myFuture)
+            UserDataInTheHome(myFuture: myFuture),
+            const UploadImageToApp()
           ],
         ),
       ),
     );
   }
 }
-
