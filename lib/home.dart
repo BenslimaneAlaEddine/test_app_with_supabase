@@ -15,27 +15,21 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  String? avatar;
+
   Future<List<Map<String, dynamic>>> getData() async {
     final response = await Supabase.instance.client
         .from('Profile')
-        .select('firstName,secondName');
+        .select('firstName,secondName,avatar');
+    if (response[0]["avatar"] != null) {
+      setState(() {
+        avatar = Supabase.instance.client.storage
+            .from("test")
+            .getPublicUrl(response[0]["avatar"]);
+      });
+    }
     return response;
   }
-
-  //   Future<dynamic> getData() async {
-  //     try {
-  //       final response = await Supabase.instance.client
-  //           .from('Profile')
-  //           .select('firstName,secondName');
-  //       return response;
-  //     }
-  //     on PostgrestException catch(e){
-  //       return e.message;
-  //     }
-  //     catch(e){
-  //       return "Exception error";
-  //     }
-  //   }
 
   late Future myFuture;
 
@@ -71,31 +65,43 @@ class _HomeState extends State<Home> {
           centerTitle: true,
           primary: true,
           toolbarHeight: 90,
-          leadingWidth: 80,
+          leadingWidth: 90,
           backgroundColor: Colors.blueGrey,
           title: const Text("Welcome"),
           leading: Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: Container(
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.green,
-              ),
+            padding: const EdgeInsets.all(8),
+            child: CircleAvatar(
+              radius: 40,
+              backgroundColor: Colors.transparent,
+              backgroundImage: avatar != null ? NetworkImage(avatar!) : null,
+              child: avatar == null
+                  ? const Icon(
+                      Icons.account_circle,
+                      size: 60,
+                      color: Colors.white,
+                    )
+                  : null,
             ),
           ),
           actions: [
             HomePopupMenuButton(response: widget.response),
           ]),
-      body: Center(
-        child: Column(
-          children: [
-            Text(
-              "Hi ${widget.response.user?.email}: ",
-              overflow: TextOverflow.ellipsis,
-            ),
-            UserDataInTheHome(myFuture: myFuture),
-            const UploadImageToApp()
-          ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              Text(
+                "Hi ${widget.response.user?.email}: ",
+                overflow: TextOverflow.ellipsis,
+              ),
+              UserDataInTheHome(myFuture: myFuture),
+              UploadImageToApp(set: (image) {
+                setState(() {
+                  avatar = image;
+                });
+              }),
+            ],
+          ),
         ),
       ),
     );
