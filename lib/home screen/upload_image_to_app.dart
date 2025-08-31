@@ -32,11 +32,11 @@ class UploadImageToAppState extends State<UploadImageToApp> {
         widget.set(Supabase.instance.client.storage
             .from("test")
             .getPublicUrl(pathFile));
-        setState(() {
-          url = Supabase.instance.client.storage
-              .from("test")
-              .getPublicUrl(pathFile);
-        });
+        // setState(() {
+        //   url = Supabase.instance.client.storage
+        //       .from("test")
+        //       .getPublicUrl(pathFile);
+        // });
         return "uploaded with succes";
       } else {
         return "select an image";

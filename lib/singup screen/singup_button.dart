@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SignupButton extends StatelessWidget {
   final Function snackBar;
@@ -34,6 +35,12 @@ class SignupButton extends StatelessWidget {
           if (timeDifference >= 59 || isNotTap) {
             String status = await singup(
                 email: emailController.text, password: passWordController.text);
+            try{
+              final user=Supabase.instance.client.auth.currentUser?.id;
+              Supabase.instance.client.from("Profile").insert({"idUser":user});
+            }
+            catch(e){
+            }
             now = DateTime.now();
             ScaffoldMessenger.of(context)
                 .showSnackBar(snackBar(content: Text(status), duration: 8));

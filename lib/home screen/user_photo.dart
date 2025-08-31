@@ -1,0 +1,29 @@
+import 'package:flutter/material.dart';
+
+class UserPhoto extends StatelessWidget {
+  const UserPhoto({
+    super.key,
+    required this.avatar,
+  });
+
+  final String? avatar;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: CircleAvatar(
+        radius: 40,
+        backgroundColor: Colors.transparent,
+        backgroundImage: avatar != null ? NetworkImage(avatar!) : null,
+        child: avatar == null
+            ? const Icon(
+          Icons.account_circle,
+          size: 60,
+          color: Colors.white,
+        )
+            : null,
+      ),
+    );
+  }
+}

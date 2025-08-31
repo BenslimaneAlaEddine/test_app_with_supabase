@@ -3,6 +3,7 @@ import 'package:learn/home%20screen/add_data.dart';
 import 'package:learn/home%20screen/home_pop_up_menu_button.dart';
 import 'package:learn/home%20screen/upload_image_to_app.dart';
 import 'package:learn/home%20screen/user_data_in_the_home.dart';
+import 'package:learn/home%20screen/user_photo.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Home extends StatefulWidget {
@@ -21,6 +22,8 @@ class _HomeState extends State<Home> {
     final response = await Supabase.instance.client
         .from('Profile')
         .select('firstName,secondName,avatar');
+    print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& $response");
+    if(response.isNotEmpty)
     if (response[0]["avatar"] != null) {
       setState(() {
         avatar = Supabase.instance.client.storage
@@ -68,21 +71,7 @@ class _HomeState extends State<Home> {
           leadingWidth: 90,
           backgroundColor: Colors.blueGrey,
           title: const Text("Welcome"),
-          leading: Padding(
-            padding: const EdgeInsets.all(8),
-            child: CircleAvatar(
-              radius: 40,
-              backgroundColor: Colors.transparent,
-              backgroundImage: avatar != null ? NetworkImage(avatar!) : null,
-              child: avatar == null
-                  ? const Icon(
-                      Icons.account_circle,
-                      size: 60,
-                      color: Colors.white,
-                    )
-                  : null,
-            ),
-          ),
+          leading: UserPhoto(avatar: avatar),
           actions: [
             HomePopupMenuButton(response: widget.response),
           ]),
