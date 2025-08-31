@@ -37,10 +37,11 @@ class SignupButton extends StatelessWidget {
                 email: emailController.text, password: passWordController.text);
             try{
               final user=Supabase.instance.client.auth.currentUser?.id;
-              Supabase.instance.client.from("Profile").insert({"idUser":user});
+            await  Supabase.instance.client.from("Profile").insert({"idUser":user});
             }
-            catch(e){
+           on PostgrestException catch(e){
             }
+            catch(e){}
             now = DateTime.now();
             ScaffoldMessenger.of(context)
                 .showSnackBar(snackBar(content: Text(status), duration: 8));
