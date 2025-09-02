@@ -29,9 +29,6 @@ class UploadImageToAppState extends State<UploadImageToApp> {
           await Supabase.instance.client
               .from("Profile")
               .update({"avatar": pathFile}).eq("idUser", user.id);
-          // url = Supabase.instance.client.storage
-          //     .from("test")
-          //     .getPublicUrl(pathFile);
           widget.set(Supabase.instance.client.storage
               .from("test")
               .getPublicUrl(pathFile));

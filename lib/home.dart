@@ -82,18 +82,14 @@ class _HomeState extends State<Home> {
                 overflow: TextOverflow.ellipsis,
               ),
               UserDataInTheHome(myFuture: myFuture),
-              FutureBuilder(
-                  future: myFuture,
-                  builder: (context, asyncSnapshot) {
-                    return UploadImageToApp(
-                      set: (image) {
-                        setState(() {
-                          avatar = image;
-                        });
-                      },
-                    avatar: avatar,
-                    );
-                  }),
+              UploadImageToApp(
+                set: (image) {
+                  setState(() {
+                    avatar = image;
+                  });
+                },
+              avatar: avatar,
+              ),
             ],
           ),
         ),
