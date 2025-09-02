@@ -20,12 +20,14 @@ class _LoginState extends State<Login> {
   final GlobalKey<FormState> keyForm = GlobalKey();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passWordController = TextEditingController();
+
   @override
   void dispose() {
-emailController.dispose();
-passWordController.dispose();
+    emailController.dispose();
+    passWordController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

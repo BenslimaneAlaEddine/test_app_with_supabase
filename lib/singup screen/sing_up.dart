@@ -19,6 +19,13 @@ class _SignupState extends State<Signup> {
   DateTime? now;
 
   @override
+  void dispose() {
+    emailController.dispose();
+    passWordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(

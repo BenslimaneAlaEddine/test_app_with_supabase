@@ -4,8 +4,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UploadImageToApp extends StatefulWidget {
-  const UploadImageToApp({super.key, required this.set});
-
+  const UploadImageToApp({super.key, required this.set,required this.avatar});
+ final String? avatar;
   final Function(String image) set;
 
   @override
@@ -23,20 +23,24 @@ class UploadImageToAppState extends State<UploadImageToApp> {
       final pathFile = "Images/${user!.id}/avatar.jpg";
       if (image != null) {
         await Supabase.instance.client.storage.from("test").upload(
-              pathFile,
-              image!,
-            );
-        await Supabase.instance.client
-            .from("Profile")
-            .update({"avatar": pathFile}).eq("idUser", user.id);
-        widget.set(Supabase.instance.client.storage
-            .from("test")
-            .getPublicUrl(pathFile));
-        // setState(() {
-        //   url = Supabase.instance.client.storage
-        //       .from("test")
-        //       .getPublicUrl(pathFile);
-        // });
+            pathFile, image!,
+            fileOptions: const FileOptions(upsert: true));
+        if (url == null) {
+          await Supabase.instance.client
+              .from("Profile")
+              .update({"avatar": pathFile}).eq("idUser", user.id);
+          // url = Supabase.instance.client.storage
+          //     .from("test")
+          //     .getPublicUrl(pathFile);
+          widget.set(Supabase.instance.client.storage
+              .from("test")
+              .getPublicUrl(pathFile));
+        }
+        else{
+          widget.set(
+              "${Supabase.instance.client.storage.from("test").getPublicUrl(pathFile)}?tm=${DateTime.now().millisecond}");
+        }
+
         return "uploaded with succes";
       } else {
         return "select an image";
@@ -46,7 +50,7 @@ class UploadImageToAppState extends State<UploadImageToApp> {
     } on PostgrestException catch (e) {
       return e.message;
     } catch (e) {
-      return "Exceptional error";
+      return "Exceptional error ${e}";
     }
   }
 
@@ -59,6 +63,13 @@ class UploadImageToAppState extends State<UploadImageToApp> {
       setState(() {
         image = File(pick.path);
       });
+    }
+  }
+  @override
+  void didUpdateWidget(covariant UploadImageToApp oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if(oldWidget.avatar != widget.avatar){
+      url=widget.avatar;
     }
   }
 

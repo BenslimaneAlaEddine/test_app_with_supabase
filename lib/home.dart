@@ -22,9 +22,7 @@ class _HomeState extends State<Home> {
     final response = await Supabase.instance.client
         .from('Profile')
         .select('firstName,secondName,avatar');
-    print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& $response");
-    if(response.isNotEmpty)
-    if (response[0]["avatar"] != null) {
+    if (response.isNotEmpty) if (response[0]["avatar"] != null) {
       setState(() {
         avatar = Supabase.instance.client.storage
             .from("test")
@@ -84,11 +82,18 @@ class _HomeState extends State<Home> {
                 overflow: TextOverflow.ellipsis,
               ),
               UserDataInTheHome(myFuture: myFuture),
-              UploadImageToApp(set: (image) {
-                setState(() {
-                  avatar = image;
-                });
-              }),
+              FutureBuilder(
+                  future: myFuture,
+                  builder: (context, asyncSnapshot) {
+                    return UploadImageToApp(
+                      set: (image) {
+                        setState(() {
+                          avatar = image;
+                        });
+                      },
+                    avatar: avatar,
+                    );
+                  }),
             ],
           ),
         ),

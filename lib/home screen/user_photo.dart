@@ -16,6 +16,7 @@ class UserPhoto extends StatelessWidget {
         radius: 40,
         backgroundColor: Colors.transparent,
         backgroundImage: avatar != null ? NetworkImage(avatar!) : null,
+        // key: UniqueKey(),
         child: avatar == null
             ? const Icon(
           Icons.account_circle,
