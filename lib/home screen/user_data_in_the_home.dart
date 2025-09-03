@@ -35,10 +35,10 @@ class UserDataInTheHome extends StatelessWidget {
               children: [
                 Text(data.isEmpty
                     ? "FirstName: "
-                    : "FirstName: ${data[0]["firstName"]}"),
+                    : "FirstName: ${data[0]["firstName"] ?? ''}"),
                 Text(data.isEmpty
                     ? "SecondName: "
-                    : "SecondName: ${data[0]["secondName"]}"),
+                    : "SecondName: ${data[0]["secondName"] ?? ''}"),
               ],
             );
           } else {

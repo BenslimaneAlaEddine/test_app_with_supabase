@@ -16,6 +16,7 @@ class AddDataForm extends StatelessWidget {
       required this.existingData,
       required this.callBackMyFutureFromHome,
       required this.contextD});
+
   final Function() callBackMyFutureFromHome;
   final GlobalKey<FormState> keyForm;
   final TextEditingController firstName;
@@ -23,17 +24,21 @@ class AddDataForm extends StatelessWidget {
   final AuthResponse response;
   final List existingData;
   final BuildContext contextD;
+
   // bool updated = false;
   @override
   Widget build(BuildContext context) {
-
     return Form(
         key: keyForm,
         child: Column(
           children: [
             const Text("Add your data to your profile"),
-            AddDataFirstNameField(firstName: firstName,),
-            AddDataSecondNameField(secondName: secondName,),
+            AddDataFirstNameField(
+              firstName: firstName,
+            ),
+            AddDataSecondNameField(
+              secondName: secondName,
+            ),
             InsertAndUpdateAndDeleteDataButtom(
                 callBackMyFutureFromHome: callBackMyFutureFromHome,
                 existingData: existingData,
@@ -79,12 +84,13 @@ class AddDataForm extends StatelessWidget {
         await Supabase.instance.client.from("Profile").update({
           "firstName": firstName.text.trim(),
         }).eq('idUser', response.user!.id);
-      } else if (existingData[0]["secondName"] != secondName.text.trim()){
+      } else if (existingData[0]["secondName"] != secondName.text.trim()) {
         await Supabase.instance.client.from("Profile").update({
           "secondName": secondName.text.trim(),
         }).eq('idUser', response.user!.id);
+      } else {
+        return "same data !";
       }
-      else{ return "same data !";}
       return "updated avec succes";
     } on PostgrestException catch (e) {
       return e.message;
@@ -95,10 +101,11 @@ class AddDataForm extends StatelessWidget {
 
   Future<String> delete() async {
     try {
+      //ndiro update wradohom null pcq lokan ndiro delete troh gae la lign mn BD c-a-d mm l path tae la photo et tt yroh
       await Supabase.instance.client
           .from("Profile")
-          .delete()
-          .eq("idUser", response.user!.id);
+          .update({"firstName": null, "secondName": null}).eq(
+              "idUser", response.user!.id);
       return "Deleted";
     } on PostgrestException catch (e) {
       return e.message;
