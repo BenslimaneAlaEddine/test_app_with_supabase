@@ -4,9 +4,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UploadImageToApp extends StatefulWidget {
-  const UploadImageToApp({super.key, required this.set,required this.avatar});
- final String? avatar;
-  final Function(String image) set;
+  const UploadImageToApp({super.key, required this.set, required this.avatar});
+
+  final String? avatar;
+  final Function(String? image) set;
 
   @override
   UploadImageToAppState createState() => UploadImageToAppState();
@@ -29,13 +30,17 @@ class UploadImageToAppState extends State<UploadImageToApp> {
           await Supabase.instance.client
               .from("Profile")
               .update({"avatar": pathFile}).eq("idUser", user.id);
-          widget.set(Supabase.instance.client.storage
-              .from("test")
-              .getPublicUrl(pathFile));
-        }
-        else{
           widget.set(
-              "${Supabase.instance.client.storage.from("test").getPublicUrl(pathFile)}?tm=${DateTime.now().millisecond}");
+              "${Supabase.instance.client.storage.from("test").getPublicUrl(
+                  pathFile)}?tm=${DateTime
+                  .now()
+                  .millisecond}");
+        } else {
+          widget.set(
+              "${Supabase.instance.client.storage.from("test").getPublicUrl(
+                  pathFile)}?tm=${DateTime
+                  .now()
+                  .millisecond}");
         }
 
         return "uploaded with succes";
@@ -51,6 +56,33 @@ class UploadImageToAppState extends State<UploadImageToApp> {
     }
   }
 
+  Future<String> remove() async {
+    try {
+      final user = Supabase.instance.client.auth.currentUser;
+      final pathFile = "Images/${user!.id}/avatar.jpg";
+      final removed = await Supabase.instance.client.storage.from("test")
+          .remove([pathFile]);
+      //lakhatarch hna lokam mandiroch update wrodaha null ki ydeconcte yeawad yhal yal9a l path fl DB aya wykon lcach fl Storage yaetih la photo li fl cach
+      await Supabase.instance.client.from("Profile")
+          .update({"avatar": null})
+          .eq("idUser", user.id);
+      widget.set(null);
+      if (removed.isNotEmpty) {
+        print("not empty");
+        return "removed with succes";
+      } else {
+        {
+          print(" empty");
+          return "no image removed";
+        }
+      }
+    } on StorageException catch (e) {
+      return e.message;
+    } catch (e) {
+      return 'Unexpected error';
+    }
+  }
+
   Future<void> upload() async {
     final picker = ImagePicker();
     final XFile? pick = await picker.pickImage(
@@ -62,11 +94,12 @@ class UploadImageToAppState extends State<UploadImageToApp> {
       });
     }
   }
+
   @override
   void didUpdateWidget(covariant UploadImageToApp oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if(oldWidget.avatar != widget.avatar){
-      url=widget.avatar;
+    if (oldWidget.avatar != widget.avatar) {
+      url = widget.avatar;
     }
   }
 
@@ -76,10 +109,10 @@ class UploadImageToAppState extends State<UploadImageToApp> {
       children: [
         image != null
             ? Image.file(
-                image!,
-                height: 200,
-                width: 200,
-              )
+          image!,
+          height: 200,
+          width: 200,
+        )
             : const Text("No image selected"),
         OutlinedButton(onPressed: upload, child: const Text("upload image")),
         OutlinedButton(
@@ -93,6 +126,15 @@ class UploadImageToAppState extends State<UploadImageToApp> {
               ));
             },
             child: const Text("upload image to your profile")),
+        OutlinedButton(
+            onPressed: () async {
+              final status = await remove();
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(status),
+                duration: const Duration(seconds: 2),
+              ));
+            },
+            child: const Text("remove image from your profile")),
       ],
     );
   }

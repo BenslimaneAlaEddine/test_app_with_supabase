@@ -83,7 +83,7 @@ class _HomeState extends State<Home> {
               ),
               UserDataInTheHome(myFuture: myFuture),
               UploadImageToApp(
-                set: (image) {
+                set: (String? image) {
                   setState(() {
                     avatar = image;
                   });
