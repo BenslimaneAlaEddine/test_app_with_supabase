@@ -62,7 +62,7 @@ class UploadImageToAppState extends State<UploadImageToApp> {
       final pathFile = "Images/${user!.id}/avatar.jpg";
       final removed = await Supabase.instance.client.storage.from("test")
           .remove([pathFile]);
-      //lakhatarch hna lokam mandiroch update wrodaha null ki ydeconcte yeawad yhal yal9a l path fl DB aya wykon lcach fl Storage yaetih la photo li fl cach
+      //lakhatarch hna lokam mandiroch update wrodaha null ki ydeconcte yeawad yhal yal9a l path fl DB aya wykon lcach fl Storage yaetih la photo li fl cach wida kan khwa lcach yrodlina error
       await Supabase.instance.client.from("Profile")
           .update({"avatar": null})
           .eq("idUser", user.id);

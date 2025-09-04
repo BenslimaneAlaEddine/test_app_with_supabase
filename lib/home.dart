@@ -69,7 +69,15 @@ class _HomeState extends State<Home> {
           leadingWidth: 90,
           backgroundColor: Colors.blueGrey,
           title: const Text("Welcome"),
-          leading: UserPhoto(avatar: avatar),
+          leading: GestureDetector(
+              onTap: (){
+                if(avatar != null){
+                showDialog(context: context, builder: (contextD){
+                  return AlertDialog(content: Image.network(avatar!),);
+                });
+                }
+              },
+              child: UserPhoto(avatar: avatar)),
           actions: [
             HomePopupMenuButton(response: widget.response),
           ]),
