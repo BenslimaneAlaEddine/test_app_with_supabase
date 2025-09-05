@@ -17,7 +17,7 @@ class AddDataForm extends StatelessWidget {
       required this.callBackMyFutureFromHome,
       required this.contextD});
 
-  final Function() callBackMyFutureFromHome;
+  final Function({required bool isInitState}) callBackMyFutureFromHome;
   final GlobalKey<FormState> keyForm;
   final TextEditingController firstName;
   final TextEditingController secondName;

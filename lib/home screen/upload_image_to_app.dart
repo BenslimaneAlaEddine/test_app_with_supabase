@@ -30,17 +30,13 @@ class UploadImageToAppState extends State<UploadImageToApp> {
           await Supabase.instance.client
               .from("Profile")
               .update({"avatar": pathFile}).eq("idUser", user.id);
-          widget.set(
-              "${Supabase.instance.client.storage.from("test").getPublicUrl(
-                  pathFile)}?tm=${DateTime
-                  .now()
-                  .millisecond}");
+          widget.set(Supabase.instance.client.storage
+              .from("test")
+              .getPublicUrl(pathFile));
         } else {
-          widget.set(
-              "${Supabase.instance.client.storage.from("test").getPublicUrl(
-                  pathFile)}?tm=${DateTime
-                  .now()
-                  .millisecond}");
+          widget.set(Supabase.instance.client.storage
+              .from("test")
+              .getPublicUrl(pathFile));
         }
 
         return "uploaded with succes";
@@ -60,12 +56,13 @@ class UploadImageToAppState extends State<UploadImageToApp> {
     try {
       final user = Supabase.instance.client.auth.currentUser;
       final pathFile = "Images/${user!.id}/avatar.jpg";
-      final removed = await Supabase.instance.client.storage.from("test")
+      final removed = await Supabase.instance.client.storage
+          .from("test")
           .remove([pathFile]);
       //lakhatarch hna lokam mandiroch update wrodaha null ki ydeconcte yeawad yhal yal9a l path fl DB aya wykon lcach fl Storage yaetih la photo li fl cach wida kan khwa lcach yrodlina error
-      await Supabase.instance.client.from("Profile")
-          .update({"avatar": null})
-          .eq("idUser", user.id);
+      await Supabase.instance.client
+          .from("Profile")
+          .update({"avatar": null}).eq("idUser", user.id);
       widget.set(null);
       if (removed.isNotEmpty) {
         print("not empty");
@@ -109,10 +106,10 @@ class UploadImageToAppState extends State<UploadImageToApp> {
       children: [
         image != null
             ? Image.file(
-          image!,
-          height: 200,
-          width: 200,
-        )
+                image!,
+                height: 200,
+                width: 200,
+              )
             : const Text("No image selected"),
         OutlinedButton(onPressed: upload, child: const Text("upload image")),
         OutlinedButton(

@@ -8,7 +8,7 @@ class AddData extends StatelessWidget {
       required this.response,
       required this.existingData,
       required this.callBackMyFutureFromHome});
-  final Function() callBackMyFutureFromHome;
+  final Function({required bool isInitState}) callBackMyFutureFromHome;
   final AuthResponse response;
   final List existingData;
   @override

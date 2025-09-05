@@ -18,11 +18,11 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   String? avatar;
 
-  Future<List<Map<String, dynamic>>> getData() async {
+  Future<List<Map<String, dynamic>>> getData({required bool isInitState}) async {
     final response = await Supabase.instance.client
         .from('Profile')
         .select('firstName,secondName,avatar');
-    if (response.isNotEmpty) if (response[0]["avatar"] != null) {
+    if (response.isNotEmpty && isInitState) if (response[0]["avatar"] != null ) {
       setState(() {
         avatar = Supabase.instance.client.storage
             .from("test")
@@ -37,7 +37,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    myFuture = getData();
+    myFuture = getData(isInitState: true);
   }
 
   @override
@@ -53,9 +53,9 @@ class _HomeState extends State<Home> {
             if (asyncSnapshot.hasError) return const Text("error");
             // existingData = asyncSnapshot.data ?? [];
             return AddData(
-              callBackMyFutureFromHome: () {
+              callBackMyFutureFromHome: ({required bool isInitState}) {
                 setState(() {
-                  myFuture = getData();
+                  myFuture = getData(isInitState: isInitState);
                 });
               },
               response: widget.response,

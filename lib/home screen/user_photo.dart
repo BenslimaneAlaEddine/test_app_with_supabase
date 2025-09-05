@@ -15,7 +15,8 @@ class UserPhoto extends StatelessWidget {
       child: CircleAvatar(
         radius: 40,
         backgroundColor: Colors.transparent,
-        backgroundImage: avatar != null ? NetworkImage(avatar!) : null,
+        //glaena had ?tm mn gae l'affictation li kona ndiroha fkol mara nbadlo l9ima tae $avatar wakhtasarnaha zadna ?tm fblasa wahda wsay
+        backgroundImage: avatar != null ? NetworkImage("$avatar?tm=${DateTime.now().millisecond}") : null,
         // key: UniqueKey(),
         child: avatar == null
             ? const Icon(
