@@ -32,7 +32,6 @@ class InsertAndUpdateAndDeleteDataButtom extends StatelessWidget {
               onPressed: () async {
                 final status;
                 if (existingData.isEmpty) {
-                  // inserted = true;
                   if (keyForm.currentState?.validate() ?? false) {
                     status = await insertData();
                     Navigator.pop(contextD);

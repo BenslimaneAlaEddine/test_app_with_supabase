@@ -18,15 +18,15 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   String? avatar;
 
-  Future<List<Map<String, dynamic>>> getData({required bool isInitState}) async {
+  Future<List<Map<String, dynamic>>> getData(
+      {required bool isInitState}) async {
     final response = await Supabase.instance.client
         .from('Profile')
         .select('firstName,secondName,avatar');
-    if (response.isNotEmpty && isInitState) if (response[0]["avatar"] != null ) {
+    if (response.isNotEmpty && isInitState) if (response[0]["avatar"] != null) {
       setState(() {
-        avatar = Supabase.instance.client.storage
-            .from("test")
-            .getPublicUrl(response[0]["avatar"]);
+        avatar = avatar =
+            "${Supabase.instance.client.storage.from("test").getPublicUrl(response[0]["avatar"])}?tm=${DateTime.now().millisecond}";
       });
     }
     return response;
@@ -70,11 +70,15 @@ class _HomeState extends State<Home> {
           backgroundColor: Colors.blueGrey,
           title: const Text("Welcome"),
           leading: GestureDetector(
-              onTap: (){
-                if(avatar != null){
-                showDialog(context: context, builder: (contextD){
-                  return AlertDialog(content: Image.network(avatar!),);
-                });
+              onTap: () {
+                if (avatar != null) {
+                  showDialog(
+                      context: context,
+                      builder: (contextD) {
+                        return AlertDialog(
+                          content: Image.network(avatar!),
+                        );
+                      });
                 }
               },
               child: UserPhoto(avatar: avatar)),
@@ -96,7 +100,7 @@ class _HomeState extends State<Home> {
                     avatar = image;
                   });
                 },
-              avatar: avatar,
+                avatar: avatar,
               ),
             ],
           ),

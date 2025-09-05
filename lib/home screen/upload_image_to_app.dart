@@ -26,18 +26,20 @@ class UploadImageToAppState extends State<UploadImageToApp> {
         await Supabase.instance.client.storage.from("test").upload(
             pathFile, image!,
             fileOptions: const FileOptions(upsert: true));
-        if (url == null) {
+        if (widget.avatar == null) {
           await Supabase.instance.client
               .from("Profile")
               .update({"avatar": pathFile}).eq("idUser", user.id);
-          widget.set(Supabase.instance.client.storage
-              .from("test")
-              .getPublicUrl(pathFile));
-        } else {
-          widget.set(Supabase.instance.client.storage
-              .from("test")
-              .getPublicUrl(pathFile));
         }
+          widget.set("${Supabase.instance.client.storage
+              .from("test")
+              .getPublicUrl(pathFile)}?tm=${DateTime.now().millisecond}");
+
+        // else {
+        //   widget.set(Supabase.instance.client.storage
+        //       .from("test")
+        //       .getPublicUrl(pathFile));
+        // }
 
         return "uploaded with succes";
       } else {
